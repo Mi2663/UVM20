@@ -1,0 +1,116 @@
+{
+  "version": "1.0",
+  "description": "Пример 2: Статистика массива (сумма, среднее)",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 300,
+      "comment": "Начало массива (адреса 300-309)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 400,
+      "comment": "Текущий индекс в 400"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 10,
+      "comment": "Длина массива"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 401,
+      "comment": "Счетчик в 401"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Инициализировать сумму"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 402,
+      "comment": "Сумма в 402"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 400,
+      "comment": "[ЦИКЛ СУММИРОВАНИЯ] Загрузить адрес"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 0,
+      "comment": "Прочитать элемент массива"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 402,
+      "comment": "Загрузить текущую сумму"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 402,
+      "comment": "Добавить элемент к сумме"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Инкремент адреса"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 400,
+      "comment": "Загрузить текущий адрес"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 400,
+      "comment": "Адрес++"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Декремент счетчика"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 401,
+      "comment": "Загрузить счетчик"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 401,
+      "comment": "Счетчик--"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 401,
+      "comment": "Проверить счетчик"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 6,
+      "comment": "Вернуться к началу цикла (6)"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 402,
+      "comment": "Вычислить среднее: загрузить сумму"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 10,
+      "comment": "Делитель (длина массива)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 403,
+      "comment": "Среднее в 403 (упрощенное деление)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Завершение"
+    }
+  ]
+}
