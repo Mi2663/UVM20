@@ -181,4 +181,45 @@ def run_stage5_tests():
     """Запуск всех тестов Этапа 5"""
     print("="*60)
     print("ТЕСТИРОВАНИЕ ЭТАПА 5: ТЕСТОВАЯ ЗАДАЧА")
-    print("="
+    print("="*60)
+    
+    # Создаем test suite
+    loader = unittest.TestLoader()
+    suite = loader.loadTestsFromTestCase(TestStage5)
+    
+    # Запускаем тесты
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
+    
+    print("="*60)
+    print("ИТОГИ ТЕСТИРОВАНИЯ ЭТАПА 5:")
+    print(f"Всего тестов: {result.testsRun}")
+    print(f"Провалено: {len(result.failures)}")
+    print(f"Ошибок: {len(result.errors)}")
+    print(f"Пропущено: {result.testsRun - len(result.failures) - len(result.errors)}")
+    
+    if result.wasSuccessful():
+        print("\n✅ ТЕСТЫ ЭТАПА 5 ПРОЙДЕНЫ!")
+        print("   Базовая функциональность Этапа 5 работает корректно.")
+    else:
+        print("\n❌ ЕСТЬ ПРОБЛЕМЫ С ТЕСТАМИ")
+    
+    return result.wasSuccessful()
+
+if __name__ == '__main__':
+    success = run_stage5_tests()
+    
+    if success:
+        print("\n" + "="*60)
+        print("ДЛЯ ПОЛНОЙ ПРОВЕРКИ ЭТАПА 5:")
+        print("="*60)
+        print("Запустите полный скрипт Этапа 5:")
+        print("  python run_stage5.py")
+        print()
+        print("Это выполнит:")
+        print("  1. Основную задачу (sqrt над вектором)")
+        print("  2. Три примера программ")
+        print("  3. Проверит результаты")
+        print("  4. Покажет дамп памяти")
+    
+    sys.exit(0 if success else 1)
