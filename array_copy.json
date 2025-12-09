@@ -1,36 +1,126 @@
 {
   "version": "1.0",
-  "description": "Копирование массива (для этапа 3)",
+  "description": "Копирование массива (для Этапа 3)",
   "program": [
     {
       "opcode": "LOAD_CONST",
-      "operand": 100,
-      "comment": "Начальный адрес источника"
+      "operand": 1000,
+      "comment": "Загрузить начальный адрес источника в ACC"
     },
     {
       "opcode": "STORE_MEM",
       "operand": 500,
-      "comment": "Сохранить в аккумулятор для цикла"
+      "comment": "Сохранить адрес источника в память (ячейка 500)"
     },
     {
       "opcode": "LOAD_CONST",
-      "operand": 200,
-      "comment": "Начальный адрес назначения"
+      "operand": 2000,
+      "comment": "Загрузить начальный адрес назначения в ACC"
     },
     {
       "opcode": "STORE_MEM",
       "operand": 501,
-      "comment": "Сохранить адрес назначения"
+      "comment": "Сохранить адрес назначения в память (ячейка 501)"
     },
     {
       "opcode": "LOAD_CONST",
       "operand": 10,
-      "comment": "Длина массива"
+      "comment": "Загрузить длину массива (10 элементов)"
     },
     {
       "opcode": "STORE_MEM",
       "operand": 502,
-      "comment": "Счетчик"
+      "comment": "Сохранить счетчик в память (ячейка 502)"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 500,
+      "comment": "Загрузить текущий адрес источника"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 0,
+      "comment": "Прочитать значение из источника (косвенная адресация)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 503,
+      "comment": "Сохранить значение во временную ячейку (503)"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 501,
+      "comment": "Загрузить текущий адрес назначения"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 503,
+      "comment": "Загрузить значение из временной ячейки"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 0,
+      "comment": "Записать значение в назначение (косвенная адресация)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Загрузить 1 для инкремента"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 500,
+      "comment": "Загрузить адрес источника"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 500,
+      "comment": "Увеличить адрес источника (ACC уже содержит сумму)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Загрузить 1 для инкремента"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 501,
+      "comment": "Загрузить адрес назначения"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 501,
+      "comment": "Увеличить адрес назначения"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Загрузить 1 для декремента"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 502,
+      "comment": "Загрузить счетчик"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 502,
+      "comment": "Уменьшить счетчик"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 502,
+      "comment": "Загрузить счетчик для проверки"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Загрузить 0 для сравнения"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 6,
+      "comment": "Вернуться к началу цикла (команда 6)"
     }
   ]
 }
