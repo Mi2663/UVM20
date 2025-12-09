@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 """
-Интерпретатор УВМ - Этап 3
-Реализация модели памяти и базовых команд
+Интерпретатор УВМ - Этапы 3 и 4
+Реализация модели памяти и АЛУ (команда sqrt)
 """
 
 import json
 import sys
 import argparse
-import struct
 import math
 from typing import List, Optional, Tuple
 
 class UVMInterpreter:
-    """Интерпретатор УВМ с раздельной памятью"""
+    """Интерпретатор УВМ с раздельной памятью и АЛУ"""
     
     def __init__(self, mem_size: int = 65536):
         """
@@ -30,6 +29,7 @@ class UVMInterpreter:
         # Статистика
         self.commands_executed = 0
         self.memory_accesses = 0
+        self.sqrt_operations = 0
     
     def load_program(self, binary_file: str) -> int:
         """
@@ -84,12 +84,12 @@ class UVMInterpreter:
         
         return opcode, operand
     
+    # === КОМАНДЫ АЛУ ===
+    
     def execute_load_const(self, operand: int):
         """Выполнение команды LOAD_CONST (A=10)"""
         self.acc = operand
         self.commands_executed += 1
-        if self.pc == 0:  # Первая команда для демонстрации
-            print(f"  LOAD_CONST: ACC = {operand}")
     
     def execute_load_mem(self, operand: int):
         """Выполнение команды LOAD_MEM (A=0)"""
@@ -97,34 +97,48 @@ class UVMInterpreter:
         if 0 <= addr < len(self.memory):
             self.acc = self.memory[addr]
             self.memory_accesses += 1
-            if self.pc == 3:  # Для демонстрации
-                print(f"  LOAD_MEM: ACC = MEM[{addr}] = {self.acc}")
         else:
             print(f"⚠ Ошибка: адрес {addr} вне диапазона памяти")
+            self.acc = 0
     
     def execute_store_mem(self, operand: int):
         """Выполнение команды STORE_MEM (A=14)"""
         if 0 <= operand < len(self.memory):
             self.memory[operand] = self.acc
             self.memory_accesses += 1
-            if self.pc == 6:  # Для демонстрации
-                print(f"  STORE_MEM: MEM[{operand}] = {self.acc}")
         else:
             print(f"⚠ Ошибка: адрес {operand} вне диапазона памяти")
     
     def execute_sqrt(self, operand: int):
-        """Выполнение команды SQRT (A=2) - заглушка для Этапа 4"""
+        """
+        Выполнение команды SQRT (A=2)
+        
+        Формат: MEM[B] = sqrt(MEM[ACC])
+        ACC содержит адрес источника
+        B - адрес назначения
+        """
         src_addr = self.acc
         dst_addr = operand
         
         if 0 <= src_addr < len(self.memory) and 0 <= dst_addr < len(self.memory):
             value = self.memory[src_addr]
-            result = int(math.sqrt(abs(value)))  # Будет реализовано в Этапе 4
+            
+            # Вычисление квадратного корня
+            if value < 0:
+                # Для отрицательных чисел берем модуль
+                result = int(math.sqrt(-value))
+                print(f"  SQRT: √({value}) = √({-value})i → {result} (взят модуль)")
+            else:
+                result = int(math.sqrt(value))
+                print(f"  SQRT: MEM[{dst_addr}] = √(MEM[{src_addr}]={value}) = {result}")
+            
+            # Сохранение результата
             self.memory[dst_addr] = result
             self.memory_accesses += 2
-            print(f"  SQRT: MEM[{dst_addr}] = sqrt(MEM[{src_addr}]) = {result}")
+            self.sqrt_operations += 1
+            self.commands_executed += 1
         else:
-            print(f"⚠ Ошибка SQRT: неверные адреса {src_addr} -> {dst_addr}")
+            print(f"⚠ Ошибка SQRT: неверные адреса src={src_addr}, dst={dst_addr}")
     
     def execute_command(self, opcode: int, operand: int):
         """Выполнение одной команды"""
@@ -140,10 +154,16 @@ class UVMInterpreter:
             print(f"⚠ Неизвестный код операции: {opcode}")
             self.running = False
     
-    def run(self):
-        """Основной цикл выполнения программы"""
-        print("Начало выполнения программы...")
-        print("-" * 40)
+    def run(self, verbose: bool = False):
+        """
+        Основной цикл выполнения программы
+        
+        Args:
+            verbose: подробный вывод выполнения команд
+        """
+        if verbose:
+            print("Начало выполнения программы...")
+            print("-" * 50)
         
         while self.running and self.pc < len(self.program):
             # Декодирование команды
@@ -153,21 +173,33 @@ class UVMInterpreter:
             
             opcode, operand = decoded
             
+            # Подробный вывод
+            if verbose:
+                cmd_names = {10: "LOAD_CONST", 0: "LOAD_MEM", 
+                           14: "STORE_MEM", 2: "SQRT"}
+                cmd_name = cmd_names.get(opcode, f"CMD[{opcode}]")
+                print(f"[{self.pc:04X}] {cmd_name} {operand}")
+            
             # Выполнение команды
             self.execute_command(opcode, operand)
             
             # Переход к следующей команде
             self.pc += 3
             
-            # Ограничение для демонстрации (убрать в финальной версии)
-            if self.commands_executed > 100:
-                print("⚠ Прервано: слишком много команд")
+            # Безопасное ограничение
+            if self.commands_executed > 10000:
+                print("⚠ Прервано: слишком много команд (возможно бесконечный цикл)")
                 break
         
-        print("-" * 40)
+        if verbose:
+            print("-" * 50)
+        
         print(f"Выполнение завершено.")
         print(f"Статистика: {self.commands_executed} команд, "
-              f"{self.memory_accesses} обращений к памяти")
+              f"{self.memory_accesses} обращений к памяти, "
+              f"{self.sqrt_operations} операций sqrt")
+    
+    # === РАБОТА С ПАМЯТЬЮ ===
     
     def dump_memory(self, start_addr: int, end_addr: int) -> dict:
         """
@@ -204,60 +236,132 @@ class UVMInterpreter:
         except Exception as e:
             print(f"❌ Ошибка сохранения дампа: {e}")
     
-    def initialize_test_memory(self):
-        """Инициализация тестовой памяти для демонстрации"""
-        # Заполняем память тестовыми данными
-        for i in range(100, 110):
-            self.memory[i] = i * 10  # Значения 1000, 1010, 1020...
+    def initialize_memory_with_values(self, values: dict):
+        """
+        Инициализация памяти заданными значениями
         
-        print("Тестовая память инициализирована (адреса 100-109)")
+        Args:
+            values: словарь {адрес: значение}
+        """
+        for addr, value in values.items():
+            if 0 <= addr < len(self.memory):
+                self.memory[addr] = value
+        
+        print(f"Память инициализирована {len(values)} значениями")
+    
+    # === УТИЛИТЫ ДЛЯ ТЕСТИРОВАНИЯ SQRT ===
+    
+    def test_sqrt_operation(self, test_values: List[Tuple[int, int, int]]):
+        """
+        Тестирование операции sqrt на заданных данных
+        
+        Args:
+            test_values: список (src_addr, value, expected_result)
+        """
+        print("\n" + "=" * 50)
+        print("ТЕСТИРОВАНИЕ КОМАНДЫ SQRT")
+        print("=" * 50)
+        
+        for src_addr, value, expected in test_values:
+            # Записываем тестовое значение в память
+            self.memory[src_addr] = value
+            
+            # Устанавливаем аккумулятор на адрес источника
+            self.acc = src_addr
+            
+            # Выполняем sqrt в ячейку 1000 (для теста)
+            self.execute_sqrt(1000)
+            
+            # Проверяем результат
+            result = self.memory[1000]
+            status = "✓" if result == expected else "✗"
+            print(f"{status} √({value}) = {result} (ожидалось {expected})")
+            
+            # Очищаем тестовую ячейку
+            self.memory[1000] = 0
+        
+        print("=" * 50)
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Интерпретатор УВМ - Этап 3',
+        description='Интерпретатор УВМ - Этапы 3 и 4',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Примеры использования:
-  Базовый запуск: python uvm_interp.py program.bin dump.json 0 100
-  С тестовой программой: python uvm_interp.py test.bin memory.json 0 200
+  Базовый запуск:     python uvm_interp.py program.bin dump.json 0 100
+  Подробный вывод:    python uvm_interp.py program.bin dump.json 0 100 --verbose
+  Тест sqrt:          python uvm_interp.py --test-sqrt
   
-Тестовые программы:
-  1. Создайте программу: python uvm_asm.py array_copy.json copy.bin --binary
-  2. Запустите: python uvm_interp.py copy.bin result.json 0 300
+Тестовые программы для sqrt:
+  1. python uvm_asm.py sqrt_test.json sqrt.bin --binary
+  2. python uvm_interp.py sqrt.bin result.json 0 200 --verbose
         """
     )
     
-    parser.add_argument('program', help='Бинарный файл с программой')
-    parser.add_argument('dump', help='Файл для сохранения дампа памяти (JSON)')
-    parser.add_argument('start', type=int, help='Начальный адрес дампа')
-    parser.add_argument('end', type=int, help='Конечный адрес дампа')
-    parser.add_argument('--test', action='store_true', 
-                       help='Инициализировать тестовую память')
-    parser.add_argument('--verbose', action='store_true',
+    parser.add_argument('program', nargs='?', help='Бинарный файл с программой')
+    parser.add_argument('dump', nargs='?', help='Файл для сохранения дампа памяти (JSON)')
+    parser.add_argument('start', nargs='?', type=int, help='Начальный адрес дампа')
+    parser.add_argument('end', nargs='?', type=int, help='Конечный адрес дампа')
+    parser.add_argument('--verbose', '-v', action='store_true',
                        help='Подробный вывод выполнения')
+    parser.add_argument('--test-sqrt', action='store_true',
+                       help='Запустить тестирование команды sqrt')
+    parser.add_argument('--init-memory', type=str,
+                       help='Инициализировать память из JSON файла')
     
     args = parser.parse_args()
+    
+    # Создание интерпретатора
+    interpreter = UVMInterpreter()
+    
+    # Тестирование sqrt (если указано)
+    if args.test_sqrt:
+        # Тестовые значения: (адрес, значение, ожидаемый результат)
+        test_cases = [
+            (100, 0, 0),      # √0 = 0
+            (101, 1, 1),      # √1 = 1
+            (102, 4, 2),      # √4 = 2
+            (103, 9, 3),      # √9 = 3
+            (104, 16, 4),     # √16 = 4
+            (105, 25, 5),     # √25 = 5
+            (106, 100, 10),   # √100 = 10
+            (107, 144, 12),   # √144 = 12
+            (108, 225, 15),   # √225 = 15
+            (109, 10000, 100),# √10000 = 100
+            (110, -25, 5),    # √(-25) = 5i → 5 (берем модуль)
+        ]
+        
+        interpreter.test_sqrt_operation(test_cases)
+        return
+    
+    # Обычный режим выполнения программы
+    if not all([args.program, args.dump, args.start is not None, args.end is not None]):
+        parser.print_help()
+        print("\n❌ Ошибка: для обычного режима нужны все аргументы: program dump start end")
+        sys.exit(1)
     
     # Проверка аргументов
     if args.start >= args.end:
         print("❌ Ошибка: start должен быть меньше end")
         sys.exit(1)
     
-    if args.end - args.start > 10000:
-        print("⚠ Предупреждение: большой диапазон дампа (>10000 адресов)")
-    
-    # Создание и настройка интерпретатора
-    interpreter = UVMInterpreter()
-    
-    # Инициализация тестовой памяти (если нужно)
-    if args.test:
-        interpreter.initialize_test_memory()
+    # Инициализация памяти (если указано)
+    if args.init_memory:
+        try:
+            with open(args.init_memory, 'r') as f:
+                init_data = json.load(f)
+            
+            # Преобразуем строковые ключи в int
+            init_data_int = {int(k): v for k, v in init_data.items()}
+            interpreter.initialize_memory_with_values(init_data_int)
+        except Exception as e:
+            print(f"❌ Ошибка инициализации памяти: {e}")
     
     # Загрузка программы
     interpreter.load_program(args.program)
     
     # Выполнение программы
-    interpreter.run()
+    interpreter.run(verbose=args.verbose)
     
     # Создание и сохранение дампа памяти
     dump = interpreter.dump_memory(args.start, args.end)
