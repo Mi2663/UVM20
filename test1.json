@@ -1,0 +1,24 @@
+{
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 520,
+      "comment": "Тест из спецификации: A=10, B=520"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 167,
+      "comment": "Тест из спецификации: A=14, B=167"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 133,
+      "comment": "Тест из спецификации: A=0, B=133"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 954,
+      "comment": "Тест из спецификации: A=2, B=954"
+    }
+  ]
+}
