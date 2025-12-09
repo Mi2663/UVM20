@@ -1,0 +1,86 @@
+{
+  "version": "1.0",
+  "description": "ЭТАП 5: Поэлементное вычисление sqrt() над вектором длины 10",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 500,
+      "comment": "Адрес начала вектора (500-509)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 1000,
+      "comment": "Сохранить текущий индекс в ячейке 1000"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 10,
+      "comment": "Длина вектора = 10"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 1001,
+      "comment": "Счетчик итераций в ячейке 1001"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 1000,
+      "comment": "[ЦИКЛ] Загрузить текущий адрес элемента"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 0,
+      "comment": "Вычислить sqrt(MEM[адрес]) и записать обратно"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Инкремент адреса"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 1000,
+      "comment": "Загрузить текущий адрес"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 1000,
+      "comment": "Адрес++ (аккумулятор уже содержит сумму)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Декремент счетчика"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 1001,
+      "comment": "Загрузить счетчик"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 1001,
+      "comment": "Счетчик--"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 1001,
+      "comment": "Проверить счетчик"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Для сравнения с 0"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 4,
+      "comment": "Вернуться к началу цикла (к команде 4)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Завершение программы"
+    }
+  ]
+}
