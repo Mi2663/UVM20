@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "description": "Тест команды sqrt() для Этапа 4",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 100,
+      "comment": "Загрузить адрес источника (100)"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 200,
+      "comment": "Вычислить sqrt(MEM[100]) и сохранить в MEM[200]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 101,
+      "comment": "Загрузить адрес источника (101)"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 201,
+      "comment": "Вычислить sqrt(MEM[101]) и сохранить в MEM[201]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 102,
+      "comment": "Загрузить адрес источника (102)"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 202,
+      "comment": "Вычислить sqrt(MEM[102]) и сохранить в MEM[202]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 103,
+      "comment": "Загрузить адрес источника (103)"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 203,
+      "comment": "Вычислить sqrt(MEM[103]) и сохранить в MEM[203]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 104,
+      "comment": "Загрузить адрес источника (104)"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 204,
+      "comment": "Вычислить sqrt(MEM[104]) и сохранить в MEM[204]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Обнулить аккумулятор"
+    }
+  ]
+}
