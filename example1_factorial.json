@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "description": "Пример 1: Вычисление факториала числа",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 5,
+      "comment": "Число для вычисления факториала (5!)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 200,
+      "comment": "Сохранить число в ячейке 200"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Инициализировать результат = 1"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 201,
+      "comment": "Результат в ячейке 201"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 200,
+      "comment": "[ЦИКЛ] Загрузить текущее число"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Для проверки на 0"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Декремент числа"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 200,
+      "comment": "Загрузить число"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 200,
+      "comment": "Число--"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 201,
+      "comment": "Загрузить результат"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 200,
+      "comment": "Загрузить число"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 201,
+      "comment": "Результат *= число"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 200,
+      "comment": "Проверить, достигли ли 0"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 4,
+      "comment": "Вернуться к началу цикла (5)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Завершение"
+    }
+  ]
+}
