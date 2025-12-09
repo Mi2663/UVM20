@@ -9,7 +9,7 @@ import json
 import sys
 import argparse
 import os
-from typing import List, Dict, Tuple
+from typing import List, Dict
 
 class UVMIntermediate:
     """Промежуточное представление команды"""
@@ -98,9 +98,14 @@ class UVMAssembler:
         # Формат: [AAAA BBBB] [BBBB BBBB] [BBBB BBBB]
         # A: 4 бита, B: 12-13 бит
         
+        # ПРАВИЛЬНЫЙ РАСЧЕТ:
+        # byte1 = (opcode << 4) | ((operand >> 8) & 0x0F)
+        # byte2 = operand & 0xFF
+        # byte3 = 0
+        
         byte1 = (cmd.opcode << 4) | ((cmd.operand >> 8) & 0x0F)
         byte2 = cmd.operand & 0xFF
-        byte3 = 0  # Третий байт (для 13-битных операндов можно использовать)
+        byte3 = 0
         
         return bytes([byte1, byte2, byte3])
     
