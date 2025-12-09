@@ -1,0 +1,171 @@
+{
+  "version": "1.0",
+  "description": "Пример 3: Операции с матрицами 3x3",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 600,
+      "comment": "Матрица A (адреса 600-608)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 700,
+      "comment": "Текущий индекс A"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 610,
+      "comment": "Матрица B (адреса 610-618)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 701,
+      "comment": "Текущий индекс B"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 620,
+      "comment": "Результат C (адреса 620-628)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 702,
+      "comment": "Текущий индекс C"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 9,
+      "comment": "Количество элементов (3x3 = 9)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 703,
+      "comment": "Счетчик в 703"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 700,
+      "comment": "[ЦИКЛ] Загрузить адрес A[i]"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 0,
+      "comment": "Прочитать A[i]"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 704,
+      "comment": "Временное хранение A[i]"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 701,
+      "comment": "Загрузить адрес B[i]"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 0,
+      "comment": "Прочитать B[i]"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 704,
+      "comment": "Загрузить A[i]"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 705,
+      "comment": "C[i] = A[i] + B[i] (во временную)"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 702,
+      "comment": "Загрузить адрес C[i]"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 705,
+      "comment": "Загрузить результат"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 0,
+      "comment": "Записать C[i]"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Инкремент индексов"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 700,
+      "comment": "Индекс A"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 700,
+      "comment": "A++"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Индекс B"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 701,
+      "comment": "Загрузить B"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 701,
+      "comment": "B++"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Индекс C"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 702,
+      "comment": "Загрузить C"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 702,
+      "comment": "C++"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 1,
+      "comment": "Декремент счетчика"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 703,
+      "comment": "Загрузить счетчик"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 703,
+      "comment": "Счетчик--"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 703,
+      "comment": "Проверить счетчик"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 8,
+      "comment": "Вернуться к началу цикла (8)"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 0,
+      "comment": "Завершение"
+    }
+  ]
+}
