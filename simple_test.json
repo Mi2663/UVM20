@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "description": "Простой тест для Этапа 3",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 42,
+      "comment": "Загрузить число 42 в аккумулятор"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 100,
+      "comment": "Сохранить 42 в ячейку 100"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 100,
+      "comment": "Загрузить адрес 100 в аккумулятор"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 0,
+      "comment": "Прочитать из ячейки 100 (должно быть 42)"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 101,
+      "comment": "Сохранить результат в ячейку 101"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 255,
+      "comment": "Загрузить число 255"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 102,
+      "comment": "Сохранить 255 в ячейку 102"
+    }
+  ]
+}
