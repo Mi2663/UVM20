@@ -209,7 +209,7 @@ class TestUVMAssemblerStage2(unittest.TestCase):
         self.assertEqual(len(encoded), 3)
         
         # STORE_MEM: A=14 (0x0E), B=167 (0x00A7)
-        # byte1 = 0xE0 | (0x00 & 0x0F) = 0xE0
+        # byte1 = (0x0E << 4) | (0x00 & 0x0F) = 0xE0 | 0x00 = 0xE0
         # byte2 = 0xA7
         # byte3 = 0x00
         expected = bytes([0xE0, 0xA7, 0x00])
@@ -227,7 +227,7 @@ class TestUVMAssemblerStage2(unittest.TestCase):
         self.assertEqual(len(encoded), 3)
         
         # SQRT: A=2 (0x02), B=954 (0x03BA)
-        # byte1 = 0x20 | (0x03 & 0x0F) = 0x23
+        # byte1 = (0x02 << 4) | (0x03 & 0x0F) = 0x20 | 0x03 = 0x23
         # byte2 = 0xBA
         # byte3 = 0x00
         expected = bytes([0x23, 0xBA, 0x00])
@@ -283,9 +283,24 @@ class TestUVMAssemblerStage2(unittest.TestCase):
         
         intermediate = self.assembler.translate_to_intermediate(program)
         
-        # Проверяем кодирование каждой команды
+        # ИСПРАВЛЕННЫЕ ОЖИДАЕМЫЕ БАЙТЫ:
+        # 1. LOAD_CONST 255: A=10 (0x0A), B=255 (0x00FF)
+        #    byte1 = (0x0A << 4) | (0x00 & 0x0F) = 0xA0 | 0x00 = 0xA0
+        #    byte2 = 0xFF
+        #    byte3 = 0x00
+        
+        # 2. STORE_MEM 1000: A=14 (0x0E), B=1000 (0x03E8)
+        #    byte1 = (0x0E << 4) | (0x03 & 0x0F) = 0xE0 | 0x03 = 0xE3
+        #    byte2 = 0xE8
+        #    byte3 = 0x00
+        
+        # 3. SQRT 500: A=2 (0x02), B=500 (0x01F4)
+        #    byte1 = (0x02 << 4) | (0x01 & 0x0F) = 0x20 | 0x01 = 0x21
+        #    byte2 = 0xF4
+        #    byte3 = 0x00
+        
         expected_bytes = [
-            bytes([0xAF, 0xFF, 0x00]),  # LOAD_CONST 255
+            bytes([0xA0, 0xFF, 0x00]),  # LOAD_CONST 255
             bytes([0xE3, 0xE8, 0x00]),  # STORE_MEM 1000
             bytes([0x21, 0xF4, 0x00])   # SQRT 500
         ]
