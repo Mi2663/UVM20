@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "description": "Копирование массива (для этапа 3)",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 100,
+      "comment": "Начальный адрес источника"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 500,
+      "comment": "Сохранить в аккумулятор для цикла"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 200,
+      "comment": "Начальный адрес назначения"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 501,
+      "comment": "Сохранить адрес назначения"
+    },
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 10,
+      "comment": "Длина массива"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 502,
+      "comment": "Счетчик"
+    }
+  ]
+}
