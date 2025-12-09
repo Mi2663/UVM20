@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "description": "Тестовая программа для УВМ",
+  "program": [
+    {
+      "opcode": "LOAD_CONST",
+      "operand": 520,
+      "comment": "Тест: A=10, B=520"
+    },
+    {
+      "opcode": "LOAD_MEM",
+      "operand": 133,
+      "comment": "Тест: A=0, B=133"
+    },
+    {
+      "opcode": "STORE_MEM",
+      "operand": 167,
+      "comment": "Тест: A=14, B=167"
+    },
+    {
+      "opcode": "SQRT",
+      "operand": 954,
+      "comment": "Тест: A=2, B=954"
+    }
+  ]
+}
