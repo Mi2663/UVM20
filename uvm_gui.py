@@ -15,7 +15,7 @@ class UVMGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("УВМ - Вариант 20 (Этап 6)")
-        self.root.geometry("800x600")
+        self.root.geometry("900x700")
 
         # Создаем интерфейс
         self.create_widgets()
@@ -63,19 +63,25 @@ class UVMGUI:
 
         # Вкладка вывода
         output_tab = ttk.Frame(self.notebook)
-        self.output_text = scrolledtext.ScrolledText(output_tab, height=10)
+        self.output_text = scrolledtext.ScrolledText(output_tab, height=15)
         self.output_text.pack(fill=tk.BOTH, expand=True)
         self.notebook.add(output_tab, text="Вывод")
 
         # Вкладка памяти
         memory_tab = ttk.Frame(self.notebook)
-        self.memory_text = scrolledtext.ScrolledText(memory_tab, height=10)
+        self.memory_text = scrolledtext.ScrolledText(memory_tab, height=15)
         self.memory_text.pack(fill=tk.BOTH, expand=True)
         self.notebook.add(memory_tab, text="Память")
 
+        # Вкладка ассемблера
+        self.asm_tab = ttk.Frame(self.notebook)
+        self.asm_text = scrolledtext.ScrolledText(self.asm_tab, height=15)
+        self.asm_text.pack(fill=tk.BOTH, expand=True)
+        self.notebook.add(self.asm_tab, text="Ассемблер")
+
         # Вкладка справки
         help_tab = ttk.Frame(self.notebook)
-        help_text = scrolledtext.ScrolledText(help_tab, height=10)
+        help_text = scrolledtext.ScrolledText(help_tab, height=15)
         help_text.pack(fill=tk.BOTH, expand=True)
 
         # Заполняем справку
@@ -150,6 +156,11 @@ class UVMGUI:
         self.output_text.insert(tk.END, message + "\n")
         self.output_text.see(tk.END)
 
+    def update_asm_output(self, message):
+        """Записывает сообщение в вывод ассемблера"""
+        self.asm_text.insert(tk.END, message + "\n")
+        self.asm_text.see(tk.END)
+
     def update_memory(self, memory_data):
         """Обновляет дамп памяти"""
         self.memory_text.delete('1.0', tk.END)
@@ -170,8 +181,12 @@ class UVMGUI:
 
             program = json.loads(code)
 
+            # Очищаем вывод ассемблера
+            self.asm_text.delete('1.0', tk.END)
             self.output_text.delete('1.0', tk.END)
+            
             self.log_output("=== АССЕМБЛИРОВАНИЕ (Этапы 1-2) ===")
+            self.update_asm_output("=== РЕЗУЛЬТАТ АССЕМБЛИРОВАНИЯ ===")
 
             # Таблица кодов операций
             opcodes = {
@@ -181,41 +196,53 @@ class UVMGUI:
                 'SQRT': 2
             }
 
+            # Описания команд из спецификации
+            descriptions = {
+                'LOAD_CONST': "Размер команды: 3 байт. Операнд: поле В. Результат: регистр-аккумулятор.",
+                'LOAD_MEM': "Размер команды: 3 байт. Операнд: значение в памяти по адресу, которым является сумма адреса (регистр-аккумулятор) и смещения (поле В). Результат: регистр-аккумулятор.",
+                'STORE_MEM': "Размер команды: 3 байт. Операнд: регистр-аккумулятор. Результат: значение в памяти по адресу, которым является поле В.",
+                'SQRT': "Размер команды: 3 байт. Операнд: значение в памяти по адресу, которым является регистр-аккумулятор. Результат: значение в памяти по адресу, которым является поле В."
+            }
+
             # Парсим программу
             commands = program.get('program', [])
             self.log_output(f"Найдено команд: {len(commands)}")
-            self.log_output("")
-            self.log_output("Промежуточное представление:")
-            self.log_output("-" * 40)
-
+            
+            # Формируем байтовое представление
             for i, cmd in enumerate(commands):
                 opcode = cmd.get('opcode', '').upper()
                 operand = cmd.get('operand', 0)
                 comment = cmd.get('comment', '')
 
                 if opcode in opcodes:
-                    self.log_output(f"Команда {i}: A={opcodes[opcode]}, B={operand} # {comment}")
+                    # Формируем 3 байта
+                    byte1 = (opcodes[opcode] << 4) | ((operand >> 8) & 0x0F)
+                    byte2 = operand & 0xFF
+                    byte3 = 0
+
+                    # Выводим форматированный результат
+                    self.update_asm_output(f"{descriptions.get(opcode, '')}")
+                    self.update_asm_output(f"Тест (A={opcodes[opcode]}, B={operand}):")
+                    
+                    # Форматируем байты как в спецификации
+                    hex_bytes = f"0x{byte1:02X}, 0x{byte2:02X}, 0x{byte3:02X}"
+                    self.update_asm_output(hex_bytes)
+                    
+                    if comment:
+                        self.update_asm_output(f"# {comment}")
+                    self.update_asm_output("")
+                    
+                    self.log_output(f"Команда {i}: {opcode} {operand} → {hex_bytes}")
                 else:
                     self.log_output(f"Команда {i}: НЕИЗВЕСТНАЯ КОМАНДА '{opcode}'")
+                    self.update_asm_output(f"ОШИБКА: Неизвестная команда '{opcode}'")
 
-            self.log_output("-" * 40)
             self.log_output("✅ Ассемблирование завершено")
 
-            # Показываем байтовое представление
-            self.log_output("")
-            self.log_output("Байтовое представление (3 байта на команду):")
-            for cmd in commands:
-                opcode = opcodes.get(cmd.get('opcode', '').upper(), 0)
-                operand = cmd.get('operand', 0)
+            # Переключаемся на вкладку ассемблера
+            self.notebook.select(2)  # Третья вкладка (ассемблер)
 
-                # Формируем 3 байта
-                byte1 = (opcode << 4) | ((operand >> 8) & 0x0F)
-                byte2 = operand & 0xFF
-                byte3 = 0
-
-                self.log_output(f"  {byte1:02X} {byte2:02X} {byte3:02X}")
-
-            messagebox.showinfo("Успех", "Программа ассемблирована!")
+            messagebox.showinfo("Успех", "Программа ассемблирована!\nПроверьте вкладку 'Ассемблер'")
 
         except json.JSONDecodeError as e:
             messagebox.showerror("Ошибка", f"Некорректный JSON:\n{str(e)}")
